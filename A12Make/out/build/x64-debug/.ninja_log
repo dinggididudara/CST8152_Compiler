@@ -1,0 +1,10 @@
+# ninja log v5
+17	416	6973246767546048	CMakeFiles/JujuCompiler.dir/MainReader.c.obj	500ffaf0a62cfaa6
+13	432	6973246767676079	CMakeFiles/JujuCompiler.dir/Reader.c.obj	5a49f7500f2748a3
+8	419	6973246767676079	CMakeFiles/JujuCompiler.dir/Compilers.c.obj	34b9008610049a70
+432	663	6973246769716151	JujuCompiler.exe	96460129bc376c8f
+3	16	0	clean	8c45b54705a541e8
+17	144	6973247593340049	CMakeFiles/JujuCompiler.dir/Reader.c.obj	5a49f7500f2748a3
+13	146	6973247593380075	CMakeFiles/JujuCompiler.dir/Compilers.c.obj	34b9008610049a70
+21	170	6973247593630029	CMakeFiles/JujuCompiler.dir/MainReader.c.obj	500ffaf0a62cfaa6
+170	345	6973247594990026	JujuCompiler.exe	96460129bc376c8f
