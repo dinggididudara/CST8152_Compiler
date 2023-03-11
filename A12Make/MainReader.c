@@ -24,7 +24,7 @@
 ************************************************************
 * File name: MainReader.c
 * Compiler: MS Visual Studio 2022
-* Course: CST 8152 � Compilers, Lab Section: [011, 012, 013]
+* Course: CST 8152  Compilers, Lab Section: [011, 012, 013]
 * Assignment: A12, A22, A32.
 * Date: Sep 01 2022
 * Professor: Paulo Sousa

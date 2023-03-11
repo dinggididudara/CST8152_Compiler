@@ -2,42 +2,6 @@
 	"entries" : 
 	[
 		{
-			"name" : "A12Make_BINARY_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "C:/Users/dinggididudara/source/repos/Compilers/A12Make/out/build/x64-debug"
-		},
-		{
-			"name" : "A12Make_IS_TOP_LEVEL",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "ON"
-		},
-		{
-			"name" : "A12Make_SOURCE_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "C:/Users/dinggididudara/source/repos/Compilers/A12Make"
-		},
-		{
 			"name" : "CMAKE_AR",
 			"properties" : 
 			[
@@ -1127,42 +1091,6 @@
 		},
 		{
 			"name" : "JujuCompiler_SOURCE_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "C:/Users/dinggididudara/source/repos/Compilers/A12Make"
-		},
-		{
-			"name" : "JuliusCompiler_BINARY_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "C:/Users/dinggididudara/source/repos/Compilers/A12Make/out/build/x64-debug"
-		},
-		{
-			"name" : "JuliusCompiler_IS_TOP_LEVEL",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "ON"
-		},
-		{
-			"name" : "JuliusCompiler_SOURCE_DIR",
 			"properties" : 
 			[
 				{

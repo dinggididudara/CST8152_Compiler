@@ -121,7 +121,7 @@ ReaderPointer readerAddChar(ReaderPointer const readerPointer, juju_char ch) {
 	}
 
 	if ((ch >= NCHAR) || (ch < 0)) {
-		readerPointer->numReaderErrors;
+		readerPointer->numReaderErrors++;
 			return NULL;
 	}
 	/* TO_DO: Reset Realocation */
@@ -165,6 +165,8 @@ ReaderPointer readerAddChar(ReaderPointer const readerPointer, juju_char ch) {
 		if (tempReader != readerPointer->content) {
 			readerPointer->flags |= CHECKRELBIT;
 		}
+		readerPointer->content = tempReader;
+		readerPointer->size = newSize;
 	}
 	/* TO_DO: Add the char */
 	readerPointer->content[readerPointer->position.wrte++] = ch;
@@ -308,14 +310,15 @@ juju_int readerPrint(ReaderPointer const readerPointer) {
 	juju_char c;
 	/* TO_DO: Defensive programming (including invalid chars) */
 	c = readerGetChar(readerPointer);
-	while (c < 0 || c>127) {
+	
+	/*while (c < 0 || c>127) {
 		c = readerGetChar(readerPointer);
-	}
+	} */
 	/* TO_DO: Check flag if buffer EOB has achieved */
 	while (cont < readerPointer->position.wrte) {
 		cont++;
 		printf("%c", c);
-		c = readerGetChar(readerPointer);
+		/*c = readerGetChar(readerPointer);*/
 
 		if ((readerPointer->flags) == CHECKENDBIT) {
 			break;

@@ -5,11 +5,11 @@
     {
       "type": "default",
       "project": "CMakeLists.txt",
-      "projectTarget": "jujuCompiler.exe",
-      "name": "jujuCompiler.exe",
+      "projectTarget": "JujuCompiler.exe",
+      "name": "JujuCompiler.exe",
       "args": [
-        "R",
-        "README.txt"
+        "S",
+        "INPUT2_Volume.juju"
       ]
     }
   ]

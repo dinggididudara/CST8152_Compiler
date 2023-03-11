@@ -14,15 +14,6 @@
 # EXTERNAL cache entries
 ########################
 
-//Value Computed by CMake
-A12Make_BINARY_DIR:STATIC=C:/Users/dinggididudara/source/repos/Compilers/A12Make/out/build/x64-debug
-
-//Value Computed by CMake
-A12Make_IS_TOP_LEVEL:STATIC=ON
-
-//Value Computed by CMake
-A12Make_SOURCE_DIR:STATIC=C:/Users/dinggididudara/source/repos/Compilers/A12Make
-
 //Path to a program.
 CMAKE_AR:FILEPATH=C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.34.31933/bin/Hostx64/x64/lib.exe
 
@@ -212,15 +203,6 @@ JujuCompiler_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
 JujuCompiler_SOURCE_DIR:STATIC=C:/Users/dinggididudara/source/repos/Compilers/A12Make
-
-//Value Computed by CMake
-JuliusCompiler_BINARY_DIR:STATIC=C:/Users/dinggididudara/source/repos/Compilers/A12Make/out/build/x64-debug
-
-//Value Computed by CMake
-JuliusCompiler_IS_TOP_LEVEL:STATIC=ON
-
-//Value Computed by CMake
-JuliusCompiler_SOURCE_DIR:STATIC=C:/Users/dinggididudara/source/repos/Compilers/A12Make
 
 
 ########################
