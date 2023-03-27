@@ -116,7 +116,7 @@ juju_int startScanner(ReaderPointer psc_buf) {
  ***********************************************************
  */
 
-Token tokenizer(julius_void) {
+Token tokenizer(juju_void) {
 
 	/* TO_DO: Follow the standard and adjust datatypes */
 
@@ -166,6 +166,42 @@ Token tokenizer(julius_void) {
 		case '}':
 			currentToken.code = RBR_T;
 			return currentToken;
+		/*operators*/
+		case ',':
+			break;
+		case '=':
+			c = readerGetChar(sourceBuffer);
+			if (c == '=') { 
+				currentToken.code = EQUAL_OP;
+				currentToken.attribute.relationalOperator = OP_EQ;
+			}
+			else {//assign operator
+				readerRetract(sourceBuffer);
+				currentToken.code = ASSIGN_OP;
+			}
+			return currentToken;
+			break;
+		case '+':
+			currentToken.code = PLUS_OP;
+			currentToken.attribute.arithmeticOperator = OP_ADD;
+			return currentToken;
+		case '-':
+			currentToken.code = MINUS_OP;
+			currentToken.attribute.arithmeticOperator = OP_SUB;
+			return currentToken;
+		case '*':
+			currentToken.code = MULTI_OP;
+			currentToken.attribute.arithmeticOperator = OP_MUL;
+			return currentToken;
+		case '/':
+			currentToken.code = DIV_OP;
+			currentToken.attribute.arithmeticOperator = OP_DIV;
+			return currentToken;
+		case '"': //string literal
+			currentToken.code = DBL_QU;
+			return currentToken;
+			break;
+		
 		/* Comments */
 		case '#':
 			newc = readerGetChar(sourceBuffer);
@@ -173,10 +209,13 @@ Token tokenizer(julius_void) {
 				c = readerGetChar(sourceBuffer);
 				if (c == CHARSEOF0 || c == CHARSEOF255) {
 					readerRetract(sourceBuffer);
-					//return currentToken;
+					currentToken.code = COMM;
+					return currentToken;
 				}
 				else if (c == '\n') {
+					currentToken.code = COMM;
 					line++;
+					return currentToken;
 				}
 			} while (c != '#' && c != CHARSEOF0 && c != CHARSEOF255);
 			break;
@@ -533,6 +572,30 @@ juju_void printToken(Token t) {
 		break;
 	case EOS_T:
 		printf("EOS_T\n");
+		break;
+	case ASSIGN_OP:
+		printf("ASSIGN_OP\n");
+		break;
+	case EQUAL_OP:
+		printf("EQUAL_OP\n");
+		break;
+	case PLUS_OP:
+		printf("PLUS_OP\n");
+		break;
+	case MINUS_OP:
+		printf("MINUS_OP\n");
+		break;
+	case MULTI_OP:
+		printf("MULTI_OP\n");
+		break;
+	case DIV_OP:
+		printf("DIV_OP\n");
+		break;
+	case COMM:
+		printf("COMM\n");
+		break;
+	case DBL_QU:
+		printf("DBL_QU\n");
 		break;
 	default:
 		//numScannerErrors++;

@@ -26,8 +26,8 @@ project ("JujuCompiler")
 add_executable (JujuCompiler
 	"Compilers.h"	"Compilers.c"
 	"Reader.h"		"Reader.c"		"MainReader.c"
-		"Scanner.c"		"MainScanner.c"
-#	"Parser.h"		"Parser.c"		"MainParser.c"
-)
+	"Scanner.c"		"MainScanner.c"
+	"Parser.h"		"Parser.c"		"MainParser.c"
+    "MainParser.c" "Parser.c" "Parser.h")
 
 # TO_DO: Add tests and install targets if needed.

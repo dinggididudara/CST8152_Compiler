@@ -84,6 +84,20 @@ build CMakeFiles\JujuCompiler.dir\MainScanner.c.obj: C_COMPILER__JujuCompiler_De
   TARGET_COMPILE_PDB = CMakeFiles\JujuCompiler.dir\
   TARGET_PDB = JujuCompiler.pdb
 
+build CMakeFiles\JujuCompiler.dir\Parser.c.obj: C_COMPILER__JujuCompiler_Debug C$:\Users\dinggididudara\source\repos\Compilers\A12Make\Parser.c || cmake_object_order_depends_target_JujuCompiler
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /MDd /Zi /Ob0 /Od /RTC1
+  OBJECT_DIR = CMakeFiles\JujuCompiler.dir
+  OBJECT_FILE_DIR = CMakeFiles\JujuCompiler.dir
+  TARGET_COMPILE_PDB = CMakeFiles\JujuCompiler.dir\
+  TARGET_PDB = JujuCompiler.pdb
+
+build CMakeFiles\JujuCompiler.dir\MainParser.c.obj: C_COMPILER__JujuCompiler_Debug C$:\Users\dinggididudara\source\repos\Compilers\A12Make\MainParser.c || cmake_object_order_depends_target_JujuCompiler
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /MDd /Zi /Ob0 /Od /RTC1
+  OBJECT_DIR = CMakeFiles\JujuCompiler.dir
+  OBJECT_FILE_DIR = CMakeFiles\JujuCompiler.dir
+  TARGET_COMPILE_PDB = CMakeFiles\JujuCompiler.dir\
+  TARGET_PDB = JujuCompiler.pdb
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target JujuCompiler
@@ -92,7 +106,7 @@ build CMakeFiles\JujuCompiler.dir\MainScanner.c.obj: C_COMPILER__JujuCompiler_De
 #############################################
 # Link the executable JujuCompiler.exe
 
-build JujuCompiler.exe: C_EXECUTABLE_LINKER__JujuCompiler_Debug CMakeFiles\JujuCompiler.dir\Compilers.c.obj CMakeFiles\JujuCompiler.dir\Reader.c.obj CMakeFiles\JujuCompiler.dir\MainReader.c.obj CMakeFiles\JujuCompiler.dir\Scanner.c.obj CMakeFiles\JujuCompiler.dir\MainScanner.c.obj
+build JujuCompiler.exe: C_EXECUTABLE_LINKER__JujuCompiler_Debug CMakeFiles\JujuCompiler.dir\Compilers.c.obj CMakeFiles\JujuCompiler.dir\Reader.c.obj CMakeFiles\JujuCompiler.dir\MainReader.c.obj CMakeFiles\JujuCompiler.dir\Scanner.c.obj CMakeFiles\JujuCompiler.dir\MainScanner.c.obj CMakeFiles\JujuCompiler.dir\Parser.c.obj CMakeFiles\JujuCompiler.dir\MainParser.c.obj
   FLAGS = /DWIN32 /D_WINDOWS /W3 /MDd /Zi /Ob0 /Od /RTC1
   LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:console
   LINK_LIBRARIES = kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib

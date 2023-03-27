@@ -9,7 +9,7 @@
       "name": "JujuCompiler.exe",
       "args": [
         "S",
-        "INPUT2_Volume.juju"
+        "INPUT0_Empty.juju"
       ]
     }
   ]

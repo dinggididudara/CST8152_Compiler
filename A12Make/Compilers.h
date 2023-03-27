@@ -93,10 +93,10 @@ Main functions signatures
 ------------------------------------------------------------
 */
 juju_int mainReader(juju_int argc, juju_char** argv);
-/*
-julius_intg mainScanner(julius_intg argc, julius_char** argv);
-julius_intg mainParser(julius_intg argc, julius_char** argv);
-*/
+
+juju_int mainScanner(juju_int argc, juju_char** argv);
+juju_int mainParser(juju_int argc, juju_char** argv);
+
 juju_void printLogo();
 
 #endif

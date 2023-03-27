@@ -1,0 +1,12 @@
+# Juju Example
+main(){
+  int a; 
+  int b;
+  int c;
+  a = 1; b=1; c=3;
+  string d = "abcde";
+  print(a);
+ 
+  if(a == b) {  print(d);  }
+  else { print(C); }
+}

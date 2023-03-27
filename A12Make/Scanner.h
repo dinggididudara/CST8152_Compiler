@@ -58,7 +58,7 @@
 /* TO_DO: Define Token codes - Create your token classes */
 enum TOKENS {
 	ERR_T,		/*  0: Error token */
-	MNID_T,		/*  1: Method name identifier token (start: &) */
+	MNID_T,		/*  1: Method name identifier token */
 	STR_T,		/*  2: String literal token */
 	LPR_T,		/*  3: Left parenthesis token */
 	RPR_T,		/*  4: Right parenthesis token */
@@ -68,7 +68,15 @@ enum TOKENS {
 	EOS_T,		/*  8: End of statement (semicolon) */
 	RTE_T,		/*  9: Run-time error token */
 	INL_T,		/* 10: Run-time error token */
-	SEOF_T		/* 11: Source end-of-file token */
+	SEOF_T,		/* 11: Source end-of-file token */
+	ASSIGN_OP,  /* 12: Assign operator*/
+	EQUAL_OP,   /* 13: Equal = operator*/
+	PLUS_OP,    /* 14: + operator*/
+	MINUS_OP,   /* 15: - operator*/
+	MULTI_OP,   /* 16: * operator*/
+	DIV_OP,     /* 17: / operator*/
+	COMM,       /* 18: comment # */
+	DBL_QU      /* 20: double quote */
 };
 
 /* TO_DO: Operators token attributes */
@@ -177,9 +185,9 @@ TO_DO: Adjust your functions'definitions
 
 /* Static (local) function  prototypes */
 juju_int startScanner(ReaderPointer psc_buf);
-Token tokenizer(julius_void);
+Token tokenizer(juju_void);
 static juju_int nextClass(juju_char c);				/* character class function */
-static juju_int nextState(julius_intg, julius_char);		/* state machine function */
+static juju_int nextState(juju_int, juju_char);		/* state machine function */
 juju_void printToken(Token t);
 
 /*
@@ -226,8 +234,6 @@ Language keywords
 
 /* TO_DO: Define the list of keywords */
 static juju_char* keywordTable[KWT_SIZE] = {
-	"data",
-	"code",
 	"int",
 	"float",
 	"string",
@@ -235,7 +241,9 @@ static juju_char* keywordTable[KWT_SIZE] = {
 	"then",
 	"else",
 	"while",
-	"do"
+	"do",
+	"main",
+	"print"
 };
 
 /* About indentation (useful for positional languages (ex: Python, Cobol) */

@@ -7,7 +7,9 @@
   },
   "ExpandedNodes": [
     "",
-    "\\out"
+    "\\out",
+    "\\out\\build"
   ],
+  "SelectedNode": "\\Scanner.h",
   "PreviewInSolutionExplorer": false
 }
