@@ -49,7 +49,7 @@
 /*#pragma warning(error:4001)*/	/* to enforce C89 comments - to make // comments an error */
 
 /* Constants */
-#define VID_LEN 20  /* variable identifier length */
+#define VID_LEN 50  /* variable identifier length */
 #define ERR_LEN 40  /* error message length */
 #define NUM_LEN 5   /* maximum number of digits for IL */
 
@@ -67,7 +67,7 @@ enum TOKENS {
 	KW_T,		/*  7: Keyword token */
 	EOS_T,		/*  8: End of statement (semicolon) */
 	RTE_T,		/*  9: Run-time error token */
-	INL_T,		/* 10: Run-time error token */
+	INL_T,		/* 10: INTEGER LITERAL */
 	SEOF_T,		/* 11: Source end-of-file token */
 	ASSIGN_OP,  /* 12: Assign operator*/
 	EQUAL_OP,   /* 13: Equal = operator*/
@@ -158,13 +158,14 @@ static juju_int transitionTable[][TABLE_COLUMNS] = {
 	{     1,     3,    5, ESNR,     8, ESNR, ESNR,  ESNR}, // S0: NOAS
 	{     2,     1,    1,    1,     1,    1,    1,     1}, // S1: NOAS
 	{    FS,    FS,   FS,   FS,    FS,   FS,   FS,    FS}, // S2: FSNR (Comment)
-	{  ESNR,    4, ESNR, ESNR,  ESNR, ESNR, ESNR,   ESNR}, // S3: NOAS
-	{    FS,    FS,   FS,   FS,    FS,   FS,   FS,    FS}, // S4: FSWR (Integer Literal, IL)
+	{     4,     3,    4,    4,     4,    4,    4,     4}, // S3: NOAS
+	{    FS,    FS,   FS,   FS,    FS,   FS,   FS,    FS}, // S4: FSNR (Integer Literal, IL)
 	{  ESNR,     5,    5,    5,  ESNR,    6,    7,    10}, // S5: NOAS
 	{    FS,    FS,   FS,   FS,    FS,   FS,   FS,    FS}, // S6: ASNR (MVID, METHOD)
 	{    FS,    FS,   FS,   FS,    FS,   FS,   FS,    FS}, // S7: KEY (KEYWORD)
 	{     8,     8,    8,    8,     9,    8,    8,     8}, // S8: NOAS
-	{    FS,    FS,   FS,   FS,    FS,    FS,  FS,    FS}  // S9: FSWR (String Literal, SL)
+	{    FS,    FS,   FS,   FS,    FS,    FS,  FS,    FS},  // S9: FSWR (String Literal, SL)
+	{    FS,    FS,   FS,   FS,    FS,    FS,  FS,    FS}  // S10: FSNR (VARIABLE NAME, VARID)
 };
 
 /* Define accepting states types */
@@ -183,8 +184,8 @@ static juju_int stateType[] = {
 	FSWR, /* 06 (MVID) - METHOD */
 	FSWR, /* 07 (KEYWORD)  */
 	NOFS, /* 08 */
-	FSWR, /* 09 (SL) */
-	FSWR  /* 10 (VARID) - VARIABLE NAME */
+	FSNR, /* 09 (SL) */
+	FSNR  /* 10 (VARID) - VARIABLE NAME */
 };
 
 /*

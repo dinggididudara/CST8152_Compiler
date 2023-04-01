@@ -345,10 +345,10 @@ juju_int nextClass(juju_char c) {
 		val = 7;
 		break;
 	
-	/*case CHARSEOF0:
-	case CHARSEOF255:
-		val = 5;
-		break;*/
+	//case CHARSEOF0:
+	//case CHARSEOF255:
+	//	val = 5;
+	//	break;
 	default:
 		if (isalpha(c))
 			val = 2;
@@ -410,28 +410,24 @@ Token funcIL(juju_char lexeme[]) {
 Token funcID(juju_char lexeme[]) {
 	Token currentToken = { 0 };
 	size_t length = strlen(lexeme);
-	juju_char lastch = lexeme[length - 1];
+	juju_char lastch = lexeme[length-1];
+	
 	juju_int isID = JUJU_FALSE;
 	
-	if (currentToken.code == ERR_T) {
-		currentToken.code = VARID_T;
-		isID = JUJU_TRUE;
+	switch (lastch) {
+		case MNIDPREFIX:
+			currentToken.code = MNID_T;
+			isID = JUJU_TRUE;
+			break;
+		case '.':
+			currentToken.code = VARID_T;
+			isID = JUJU_TRUE;
+			break;
+		default:
+			// Test Keyword
+			currentToken = funcKEY(lexeme);
+			break;
 	}
-
-	//switch (lastch) {
-	//	case MNIDPREFIX:
-	//		currentToken.code = MNID_T;
-	//		isID = JUJU_TRUE;
-	//		break;
-	//	case '.':
-	//		currentToken.code = VARID_T;
-	//		isID = JUJU_TRUE;
-	//		break;
-	//	default:
-	//		// Test Keyword
-	//		currentToken = funcKEY(lexeme);
-	//		break;
-	//}
 	if (isID == JUJU_TRUE) {
 		strncpy(currentToken.attribute.idLexeme, lexeme, VID_LEN);
 		currentToken.attribute.idLexeme[VID_LEN] = CHARSEOF0;
@@ -614,6 +610,9 @@ juju_void printToken(Token t) {
 		break;
 	case VARID_T:
 		printf("VARID_T\t\t%s\n", t.attribute.idLexeme);
+		break;
+	case INL_T:
+		printf("INL_T\t\t%d\n", t.attribute.intValue);
 		break;
 	default:
 		//numScannerErrors++;
