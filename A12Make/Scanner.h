@@ -76,7 +76,8 @@ enum TOKENS {
 	MULTI_OP,   /* 16: * operator*/
 	DIV_OP,     /* 17: / operator*/
 	COMM,       /* 18: comment # */
-	DBL_QU      /* 20: double quote */
+	DBL_QU,      /* 20: double quote */
+	VARID_T			/* 21: Variable name identifier token */
 };
 
 /* TO_DO: Operators token attributes */
@@ -131,33 +132,39 @@ typedef struct Token {
 
 /* TO_DO: Define lexeme FIXED classes */
 /* These constants will be used on nextClass */
-#define CHRCOL2 '_'
-#define CHRCOL3 '&'
-#define CHRCOL4 '\''
+#define CHRCOL0 '#'
+#define CHRCOL3 '_'
+#define CHRCOL4 '"'
+#define CHRCOL5 '('
+#define CHRCOL7 '.'
+
+
 
 /* These constants will be used on VID / MID function */
-#define MNIDPREFIX '&'
+#define MNIDPREFIX '('
 
 /* TO_DO: Error states and illegal state */
 #define FS		100		/* Illegal state */
-#define ESNR	6		/* Error state with no retract */
-#define ESWR	7		/* Error state with retract */
+#define ESNR	13		/* Error state with no retract */
+#define ESWR	0		/* Error state with retract */
 
  /* TO_DO: State transition table definition */
-#define TABLE_COLUMNS 7
+#define TABLE_COLUMNS 8
 
 /* TO_DO: Transition table - type of states defined in separate table */
 static juju_int transitionTable[][TABLE_COLUMNS] = {
-	/*[A-z], [0-9],    _,    ',    #
-	   L(0),  D(1), U(2), M(3),  Q(4), E(5), O(6) */
-	{     1,  ESNR, ESNR, ESNR,    4,  ESWR, ESNR}, // S0: NOAS
-	{     1,     1,    1,    2,  ESNR, ESWR,    3}, // S1: NOAS
-	{    FS,    FS,   FS,   FS,    FS,   FS,   FS}, // S2: ASNR (MVID)
-	{    FS,    FS,   FS,   FS,    FS,   FS,   FS}, // S3: ASWR (KEY)
-	{     4,     4,    4,    4,     5, ESWR,    4}, // S4: NOAS
-	{    FS,    FS,   FS,   FS,   FS,    FS,   FS}, // S5: ASNR (SL)
-	{    FS,    FS,   FS,   FS,   FS,    FS,   FS}, // S6: ASNR (ES)
-	{    FS,    FS,   FS,   FS,   FS,    FS,   FS}
+	/*   #,  [0-9],[A..Z], _  ,   "  ,   ( ,  others, .
+	   C(0),  D(1), L(2), U(3),  Q(4), M(5),  O(6)   p(7) */
+	{     1,     3,    5, ESNR,     8, ESNR, ESNR,  ESNR}, // S0: NOAS
+	{     2,     1,    1,    1,     1,    1,    1,     1}, // S1: NOAS
+	{    FS,    FS,   FS,   FS,    FS,   FS,   FS,    FS}, // S2: FSNR (Comment)
+	{  ESNR,    4, ESNR, ESNR,  ESNR, ESNR, ESNR,   ESNR}, // S3: NOAS
+	{    FS,    FS,   FS,   FS,    FS,   FS,   FS,    FS}, // S4: FSWR (Integer Literal, IL)
+	{  ESNR,     5,    5,    5,  ESNR,    6,    7,    10}, // S5: NOAS
+	{    FS,    FS,   FS,   FS,    FS,   FS,   FS,    FS}, // S6: ASNR (MVID, METHOD)
+	{    FS,    FS,   FS,   FS,    FS,   FS,   FS,    FS}, // S7: KEY (KEYWORD)
+	{     8,     8,    8,    8,     9,    8,    8,     8}, // S8: NOAS
+	{    FS,    FS,   FS,   FS,    FS,    FS,  FS,    FS}  // S9: FSWR (String Literal, SL)
 };
 
 /* Define accepting states types */
@@ -169,12 +176,15 @@ static juju_int transitionTable[][TABLE_COLUMNS] = {
 static juju_int stateType[] = {
 	NOFS, /* 00 */
 	NOFS, /* 01 */
-	FSNR, /* 02 (MID) - Methods */
-	FSWR, /* 03 (KEY) */
-	NOFS, /* 04 */
-	FSNR, /* 05 (SL) */
-	FSNR, /* 06 (Err1 - no retract) */
-	FSWR  /* 07 (Err2 - retract) */
+	FSNR, /* 02 - COMMENT */
+	NOFS, /* 03 */
+	FSWR, /* 04 (IL) */
+	NOFS, /* 05 */
+	FSWR, /* 06 (MVID) - METHOD */
+	FSWR, /* 07 (KEYWORD)  */
+	NOFS, /* 08 */
+	FSWR, /* 09 (SL) */
+	FSWR  /* 10 (VARID) - VARIABLE NAME */
 };
 
 /*
@@ -215,12 +225,15 @@ Token funcIL	(juju_char lexeme[]);
 static PTR_ACCFUN finalStateTable[] = {
 	NULL,		/* -    [00] */
 	NULL,		/* -    [01] */
-	funcID,		/* MNID	[02] - Methods */
-	funcKEY,	/* KEY  [03] - Keywords */
-	NULL,		/* -    [04] */
-	funcSL,		/* SL   [05] - String Literal */
-	funcErr,	/* ERR1 [06] - No retract */
-	funcErr		/* ERR2 [07] - Retract */
+	NULL,		/* -	[02] - comment */
+	NULL,		/* -    [03]  */
+	funcIL,		/* IL   [04] - INTEGER LITERAL */
+	NULL,		/* -    [05]  */
+	funcID,		/* ID   [06] - FUNCTION ID */
+	funcKEY,	/* KEY  [07] - KEYWORD */
+	NULL,		/* -    [08]  */
+	funcSL,		/* SL   [09] - STRING LITERAL */
+	funcID		/* VAR  [10] - VARIABLE NAME */
 };
 
 /*

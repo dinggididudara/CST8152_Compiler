@@ -197,27 +197,27 @@ Token tokenizer(juju_void) {
 			currentToken.code = DIV_OP;
 			currentToken.attribute.arithmeticOperator = OP_DIV;
 			return currentToken;
-		case '"': //string literal
-			currentToken.code = DBL_QU;
-			return currentToken;
-			break;
+		//case '"': //string literal
+		//	currentToken.code = DBL_QU;
+		//	return currentToken;
+		//	break;
 		
 		/* Comments */
 		case '#':
 			newc = readerGetChar(sourceBuffer);
 			do {
 				c = readerGetChar(sourceBuffer);
-				if (c == CHARSEOF0 || c == CHARSEOF255) {
-					readerRetract(sourceBuffer);
+				if (c == CHARSEOF0 || c == CHARSEOF255 || c == '#') {
+					c= readerGetChar(sourceBuffer);
+					line++;
 					currentToken.code = COMM;
 					return currentToken;
 				}
 				else if (c == '\n') {
-					currentToken.code = COMM;
 					line++;
-					return currentToken;
 				}
 			} while (c != '#' && c != CHARSEOF0 && c != CHARSEOF255);
+
 			break;
 		/* Cases for END OF FILE */
 		case CHARSEOF0:
@@ -324,13 +324,13 @@ juju_int nextState(juju_int state, juju_char c) {
 /* TO_DO: Use your column configuration */
 
 /* Adjust the logic to return next column in TT */
-/*	[A-z](0), [0-9](1),	_(2), &(3), "(4), SEOF(5), other(6) */
+/*	[#](0), [0-9](1), [A-Z] (2), _ (3), " (4), ( (5), other(6), . (7) */
 
 juju_int nextClass(juju_char c) {
 	juju_int val = -1;
 	switch (c) {
-	case CHRCOL2:
-		val = 2;
+	case CHRCOL0:
+		val = 0;
 		break;
 	case CHRCOL3:
 		val = 3;
@@ -338,13 +338,20 @@ juju_int nextClass(juju_char c) {
 	case CHRCOL4:
 		val = 4;
 		break;
-	case CHARSEOF0:
-	case CHARSEOF255:
+	case CHRCOL5:
 		val = 5;
 		break;
+	case CHRCOL7:
+		val = 7;
+		break;
+	
+	/*case CHARSEOF0:
+	case CHARSEOF255:
+		val = 5;
+		break;*/
 	default:
 		if (isalpha(c))
-			val = 0;
+			val = 2;
 		else if (isdigit(c))
 			val = 1;
 		else
@@ -405,24 +412,32 @@ Token funcID(juju_char lexeme[]) {
 	size_t length = strlen(lexeme);
 	juju_char lastch = lexeme[length - 1];
 	juju_int isID = JUJU_FALSE;
-
-	switch (lastch) {
-		case MNIDPREFIX:
-			currentToken.code = MNID_T;
-			isID = JUJU_TRUE;
-			break;
-		default:
-			// Test Keyword
-			currentToken = funcKEY(lexeme);
-			break;
+	
+	if (currentToken.code == ERR_T) {
+		currentToken.code = VARID_T;
+		isID = JUJU_TRUE;
 	}
+
+	//switch (lastch) {
+	//	case MNIDPREFIX:
+	//		currentToken.code = MNID_T;
+	//		isID = JUJU_TRUE;
+	//		break;
+	//	case '.':
+	//		currentToken.code = VARID_T;
+	//		isID = JUJU_TRUE;
+	//		break;
+	//	default:
+	//		// Test Keyword
+	//		currentToken = funcKEY(lexeme);
+	//		break;
+	//}
 	if (isID == JUJU_TRUE) {
 		strncpy(currentToken.attribute.idLexeme, lexeme, VID_LEN);
 		currentToken.attribute.idLexeme[VID_LEN] = CHARSEOF0;
 	}
 	return currentToken;
 }
-
 
 /*
 ************************************************************
@@ -596,6 +611,9 @@ juju_void printToken(Token t) {
 		break;
 	case DBL_QU:
 		printf("DBL_QU\n");
+		break;
+	case VARID_T:
+		printf("VARID_T\t\t%s\n", t.attribute.idLexeme);
 		break;
 	default:
 		//numScannerErrors++;
