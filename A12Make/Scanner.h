@@ -71,13 +71,10 @@ enum TOKENS {
 	SEOF_T,		/* 11: Source end-of-file token */
 	ASSIGN_OP,  /* 12: Assign operator*/
 	EQUAL_OP,   /* 13: Equal = operator*/
-	PLUS_OP,    /* 14: + operator*/
-	MINUS_OP,   /* 15: - operator*/
-	MULTI_OP,   /* 16: * operator*/
-	DIV_OP,     /* 17: / operator*/
-	COMM,       /* 18: comment # */
-	DBL_QU,      /* 20: double quote */
-	VARID_T			/* 21: Variable name identifier token */
+	COMM,       /* 14: comment # */
+	DBL_QU,     /* 15: double quote */
+	VARID_T,	/* 16: Variable name identifier token */
+	ARTH_OP_T   /* 17: arithmetic operation token*/
 };
 
 /* TO_DO: Operators token attributes */
@@ -145,7 +142,7 @@ typedef struct Token {
 
 /* TO_DO: Error states and illegal state */
 #define FS		100		/* Illegal state */
-#define ESNR	13		/* Error state with no retract */
+#define ESNR	6		/* Error state with no retract */
 #define ESWR	0		/* Error state with retract */
 
  /* TO_DO: State transition table definition */

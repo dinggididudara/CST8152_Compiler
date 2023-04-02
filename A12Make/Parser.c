@@ -52,6 +52,7 @@
 
 juju_void startParser() {
 	lookahead = tokenizer();
+	
 	if (lookahead.code != SEOF_T) {
 		program();
 	}
@@ -68,10 +69,11 @@ juju_void startParser() {
 /* TO_DO: This is the main code for match - check your definition */
 juju_void matchToken(juju_int tokenCode, juju_int tokenAttribute) {
 	juju_int matchFlag = 1;
-	switch (lookahead.code) {
+	switch (lookahead.code) {	
 	case KW_T:
 		if (lookahead.attribute.codeType != tokenAttribute)
 			matchFlag = 0;
+		
 	default:
 		if (lookahead.code != tokenCode)
 			matchFlag = 0;
@@ -149,6 +151,28 @@ juju_void printError() {
 	case EOS_T:
 		printf("NA\n");
 		break;
+	case COMM:
+		printf("COMM\n");
+		break;
+	case VARID_T:
+		printf("VARID_T\t\t%s\n", t.attribute.idLexeme);
+		break;
+	case INL_T:
+		printf("INL_T\t\t%d\n", t.attribute.intValue);
+		break;
+	case DBL_QU:
+		printf("DBL_QU\n");
+		break;
+	case ASSIGN_OP:
+		printf("ASSIGN_OP\n");
+		break;
+	case EQUAL_OP:
+		printf("EQUAL_OP\n");
+		break;
+	case ARTH_OP_T:
+		printf("ARTH_OP_T\n");
+		break;
+	
 	default:
 		printf("%s%s%d\n", STR_LANGNAME, ": Scanner error: invalid token code: ", t.code);
 	}
@@ -157,24 +181,29 @@ juju_void printError() {
 /*
  ************************************************************
  * Program statement
- * BNF: <program> -> main& { <opt_statements> }
+ * BNF: <program> -> main { <opt_statements> }
  * FIRST(<program>)= {MNID_T (main)}.
  ***********************************************************
  */
 juju_void program() {
+	while (lookahead.code == COMM) {
+		matchToken(COMM, NO_ATTR);
+	}  //ignore comment
 	switch (lookahead.code) {
-	case MNID_T: //if main
-		if (strncmp(lookahead.attribute.idLexeme, LANG_MAIN, 5) == 0) {
-			matchToken(MNID_T, NO_ATTR);
-			matchToken(LBR_T, NO_ATTR);
-			/*dataSession();
-			codeSession();*/
-			matchToken(RBR_T, NO_ATTR);
-			break;
-		}
-		else {
+	case KW_T: //if main
+		if(lookahead.attribute.codeType == 8){
+			//if (strncmp(lookahead.attribute.idLexeme, LANG_MAIN, 5) == 0) {
+				matchToken(KW_T, KW_main);
+				matchToken(LBR_T, NO_ATTR);
+				dataSession();
+				codeSession();
+				matchToken(RBR_T, NO_ATTR);
+				break;
+			}
+			else {
 			printError();
-		}
+			}
+		
 	case SEOF_T:
 		; // Empty
 		break;
@@ -195,7 +224,7 @@ juju_void dataSession() {
 	//matchToken(KW_T, KW_data);
 	//matchToken(LBR_T, NO_ATTR);
 	optVarListDeclarations();
-	matchToken(RBR_T, NO_ATTR);
+	//matchToken(RBR_T, NO_ATTR);
 	printf("%s%s\n", STR_LANGNAME, ": Data Session parsed");
 }
 
@@ -208,7 +237,22 @@ juju_void dataSession() {
  */
 juju_void optVarListDeclarations() {
 	switch (lookahead.code) {
+	case KW_T:
+		if (lookahead.attribute.codeType == 0) { //keyword int
+			matchToken(KW_T, KW_int);
+			stringExpression();
+			assignmentStatement();
+			matchToken(INL_T, NO_ATTR); 
+		}
+		else if (lookahead.attribute.codeType == 2) { //keyword string
+			matchToken(KW_T, KW_string);
+			stringExpression();
+			assignmentStatement();
+			matchToken(STR_T, NO_ATTR);
+		}
+		break;
 	default:
+		printError();
 		; // Empty
 	}
 	printf("%s%s\n", STR_LANGNAME, ": Optional Variable List Declarations parsed");
@@ -225,7 +269,7 @@ juju_void codeSession() {
 	//matchToken(KW_T, KW_code);
 	//matchToken(LBR_T, NO_ATTR);
 	optionalStatements();
-	matchToken(RBR_T, NO_ATTR);
+	//matchToken(RBR_T, NO_ATTR);
 	printf("%s%s\n", STR_LANGNAME, ": Code Session parsed");
 }
 
@@ -247,6 +291,7 @@ juju_void optionalStatements() {
 			statements();
 			break;
 		}
+
 	default:
 		; // Empty
 	}
@@ -298,6 +343,8 @@ juju_void statementsPrime() {
  */
 juju_void statement() {
 	switch (lookahead.code) {
+	case VARID_T: //variable assignment
+		break;
 	case KW_T: //keyward table
 		switch (lookahead.attribute.codeType) {
 		case KW_do:
@@ -314,6 +361,18 @@ juju_void statement() {
 			break;
 		case KW_then:
 			matchToken(KW_T, KW_then);
+			break;
+		case KW_string:
+			matchToken(KW_T, KW_string);
+			break;
+		case KW_main:
+			matchToken(KW_T, KW_main);
+			break;
+		case KW_float:
+			matchToken(KW_T, KW_float);
+			break;
+		case KW_print:
+			matchToken(KW_T, KW_print);
 			break;
 		default:
 			printError();
@@ -362,4 +421,116 @@ juju_void outputVariableList() {
 		;
 	}
 	printf("%s%s\n", STR_LANGNAME, ": Output variable list parsed");
+}
+
+juju_void assignmentStatement() {
+	matchToken(VARID_T, NO_ATTR);
+	matchToken(ASSIGN_OP, NO_ATTR);
+	variableExpressions();
+	printf("%s%s\n", STR_LANGNAME, ": Assignment statement parsed");
+}
+
+juju_void variableExpressions() {
+	variableExpression();
+	variableExpressionsPrime();
+	printf("%s%s\n", STR_LANGNAME, ": Variable expressions parsed");
+}
+
+juju_void variableExpression() {
+	switch (lookahead.code) {
+	case VARID_T:
+	case INL_T:
+	case ARTH_OP_T:
+		arithmeticExpression();
+		break;
+	case STR_T:
+		stringExpression();
+		break;
+	case MNID_T:
+		statement();
+		break;
+	default:
+		printError();
+	}
+	printf("%s%s\n", STR_LANGNAME, ": Variable expression parsed");
+}
+
+juju_void variableExpressionsPrime() {
+	switch (lookahead.code) {
+	case ARTH_OP_T:
+		variableExpressions();
+	default:
+		; // empty string
+	}
+}
+
+juju_void arithmeticExpression() {
+	switch (lookahead.code) {
+	case ARTH_OP_T:
+		switch (lookahead.attribute.arithmeticOperator) {
+		case OP_ADD:
+			addArithmeticExpression();
+		case OP_SUB:
+			
+			break;
+		case OP_MUL:
+			multiArithmeticExpression();
+			break;
+		case OP_DIV:
+			break;
+		}
+		break;
+	case VARID_T:
+	case INL_T:
+		primaryArithmeticExpression();
+		break;
+	default:
+		printError();
+	}
+	printf("%s%s\n", STR_LANGNAME, ": Arithmetic expression parsed");
+}
+juju_void addArithmeticExpression() {
+	switch (lookahead.code) {
+	case INL_T:
+	case VARID_T:
+		multiArithmeticExpression();
+		break;
+	default:
+		printError();
+	}
+	printf("%s%s\n", STR_LANGNAME, ": Additive arithmetic expression parsed");
+}
+
+
+juju_void multiArithmeticExpression() {
+	matchToken(ARTH_OP_T, NO_ATTR);
+	switch (lookahead.code) {
+	case INL_T:
+	case VARID_T:
+		primaryArithmeticExpression();
+		break;
+	default:
+		printError();
+	}
+	printf("%s%s\n", STR_LANGNAME, ": Multiplicative arithmetic expression parsed");
+}
+juju_void primaryArithmeticExpression() {
+	switch (lookahead.code) {
+	case INL_T:
+		matchToken(INL_T, NO_ATTR);
+		break;
+	case VARID_T:
+		matchToken(VARID_T, NO_ATTR);
+		break;
+	default:
+		printError();
+		break;
+	}
+	printf("%s%s\n", STR_LANGNAME, ": Primary arithmetic expression parsed");
+}
+
+
+juju_void stringExpression() {
+	matchToken(STR_T, NO_ATTR);
+	printf("%s%s\n", STR_LANGNAME, ": String expression parsed");
 }

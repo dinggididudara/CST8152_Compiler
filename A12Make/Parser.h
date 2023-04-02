@@ -70,14 +70,16 @@ juju_int syntaxErrorNumber = 0;
 enum KEYWORDS {
 	NO_ATTR = -1,
 	//KW_return,
-	//KW_int,
-	//KW_float,
-	//KW_string,
+	KW_int,
+	KW_float,
+	KW_string,
 	KW_if,
 	KW_then,
 	KW_else,
 	KW_while,
-	KW_do
+	KW_do,
+	KW_main,
+	KW_print
 };
 
 /* Function definitions */
@@ -97,5 +99,18 @@ juju_void program();
 juju_void statement();
 juju_void statements();
 juju_void statementsPrime();
+
+juju_void assignmentStatement();
+
+juju_void variableExpressions();
+juju_void variableExpression();
+juju_void variableExpressionsPrime();
+
+juju_void arithmeticExpression();
+juju_void addArithmeticExpression();
+juju_void multiArithmeticExpression();
+juju_void primaryArithmeticExpression();
+
+juju_void stringExpression();
 
 #endif

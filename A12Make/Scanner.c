@@ -182,19 +182,19 @@ Token tokenizer(juju_void) {
 			return currentToken;
 			break;
 		case '+':
-			currentToken.code = PLUS_OP;
+			currentToken.code = ARTH_OP_T;
 			currentToken.attribute.arithmeticOperator = OP_ADD;
 			return currentToken;
 		case '-':
-			currentToken.code = MINUS_OP;
+			currentToken.code = ARTH_OP_T;
 			currentToken.attribute.arithmeticOperator = OP_SUB;
 			return currentToken;
 		case '*':
-			currentToken.code = MULTI_OP;
+			currentToken.code = ARTH_OP_T;
 			currentToken.attribute.arithmeticOperator = OP_MUL;
 			return currentToken;
 		case '/':
-			currentToken.code = DIV_OP;
+			currentToken.code = ARTH_OP_T;
 			currentToken.attribute.arithmeticOperator = OP_DIV;
 			return currentToken;
 		//case '"': //string literal
@@ -493,6 +493,7 @@ Token funcKEY(juju_char lexeme[]) {
 	else {
 		currentToken = funcErr(lexeme);
 	}
+	
 	return currentToken;
 }
 
@@ -590,18 +591,6 @@ juju_void printToken(Token t) {
 	case EQUAL_OP:
 		printf("EQUAL_OP\n");
 		break;
-	case PLUS_OP:
-		printf("PLUS_OP\n");
-		break;
-	case MINUS_OP:
-		printf("MINUS_OP\n");
-		break;
-	case MULTI_OP:
-		printf("MULTI_OP\n");
-		break;
-	case DIV_OP:
-		printf("DIV_OP\n");
-		break;
 	case COMM:
 		printf("COMM\n");
 		break;
@@ -613,6 +602,9 @@ juju_void printToken(Token t) {
 		break;
 	case INL_T:
 		printf("INL_T\t\t%d\n", t.attribute.intValue);
+		break;
+	case ARTH_OP_T:
+		printf("ARTH_OP_T\n");
 		break;
 	default:
 		//numScannerErrors++;
