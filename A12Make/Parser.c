@@ -194,9 +194,11 @@ juju_void program() {
 		if(lookahead.attribute.codeType == 8){
 			//if (strncmp(lookahead.attribute.idLexeme, LANG_MAIN, 5) == 0) {
 				matchToken(KW_T, KW_main);
+				printf("%s%s\n", STR_LANGNAME, ": main parsed");
 				matchToken(LBR_T, NO_ATTR);
-				dataSession();
-				codeSession();
+				
+				statements();
+				
 				matchToken(RBR_T, NO_ATTR);
 				break;
 			}
@@ -213,20 +215,20 @@ juju_void program() {
 	printf("%s%s\n", STR_LANGNAME, ": Program parsed");
 }
 
-/*
- ************************************************************
- * dataSession
- * BNF: <dataSession> -> data { <opt_varlist_declarations> } XXX
- * FIRST(<program>)= {KW_T (KW_data)}.
- ***********************************************************
- */
-juju_void dataSession() {
-	//matchToken(KW_T, KW_data);
-	//matchToken(LBR_T, NO_ATTR);
-	optVarListDeclarations();
-	//matchToken(RBR_T, NO_ATTR);
-	printf("%s%s\n", STR_LANGNAME, ": Data Session parsed");
-}
+///*
+// ************************************************************
+// * dataSession
+// * BNF: <dataSession> -> data { <opt_varlist_declarations> } XXX
+// * FIRST(<program>)= {KW_T (KW_data)}.
+// ***********************************************************
+// */
+//juju_void dataSession() {
+//	//matchToken(KW_T, KW_data);
+//	//matchToken(LBR_T, NO_ATTR);
+//	optVarListDeclarations();
+//	//matchToken(RBR_T, NO_ATTR);
+//	printf("%s%s\n", STR_LANGNAME, ": Data Session parsed");
+//}
 
 /*
  ************************************************************
@@ -236,19 +238,22 @@ juju_void dataSession() {
  ***********************************************************
  */
 juju_void optVarListDeclarations() {
+	if (lookahead.code == EOS_T) {
+		matchToken(EOS_T, NO_ATTR);
+	}
 	switch (lookahead.code) {
 	case KW_T:
 		if (lookahead.attribute.codeType == 0) { //keyword int
 			matchToken(KW_T, KW_int);
-			stringExpression();
-			assignmentStatement();
-			matchToken(INL_T, NO_ATTR); 
+			
+			variableID();
+			assignmentStatement(); 
 		}
-		else if (lookahead.attribute.codeType == 2) { //keyword string
+		else if (lookahead.attribute.codeType == 3) { //keyword string
 			matchToken(KW_T, KW_string);
-			stringExpression();
+			
+			variableID();
 			assignmentStatement();
-			matchToken(STR_T, NO_ATTR);
 		}
 		break;
 	default:
@@ -257,7 +262,10 @@ juju_void optVarListDeclarations() {
 	}
 	printf("%s%s\n", STR_LANGNAME, ": Optional Variable List Declarations parsed");
 }
-
+juju_void variableID() {
+	matchToken(VARID_T, NO_ATTR);
+	printf("%s%s\n", STR_LANGNAME, ": Variable ID parsed");
+}
 /*
  ************************************************************
  * codeSession statement
@@ -265,13 +273,13 @@ juju_void optVarListDeclarations() {
  * FIRST(<codeSession>)= {KW_T (KW_code)}.
  ***********************************************************
  */
-juju_void codeSession() {
-	//matchToken(KW_T, KW_code);
-	//matchToken(LBR_T, NO_ATTR);
-	optionalStatements();
-	//matchToken(RBR_T, NO_ATTR);
-	printf("%s%s\n", STR_LANGNAME, ": Code Session parsed");
-}
+//juju_void codeSession() {
+//	//matchToken(KW_T, KW_code);
+//	//matchToken(LBR_T, NO_ATTR);
+//	statements();
+//	//matchToken(RBR_T, NO_ATTR);
+//	printf("%s%s\n", STR_LANGNAME, ": Code Session parsed");
+//}
 
 /* TO_DO: Continue the development (all non-terminal functions) */
 
@@ -343,8 +351,8 @@ juju_void statementsPrime() {
  */
 juju_void statement() {
 	switch (lookahead.code) {
-	case VARID_T: //variable assignment
-		break;
+	//case EOS_T:
+		
 	case KW_T: //keyward table
 		switch (lookahead.attribute.codeType) {
 		case KW_do:
@@ -363,16 +371,13 @@ juju_void statement() {
 			matchToken(KW_T, KW_then);
 			break;
 		case KW_string:
-			matchToken(KW_T, KW_string);
-			break;
-		case KW_main:
-			matchToken(KW_T, KW_main);
+			optVarListDeclarations();
 			break;
 		case KW_float:
-			matchToken(KW_T, KW_float);
+			optVarListDeclarations();
 			break;
-		case KW_print:
-			matchToken(KW_T, KW_print);
+		case KW_int:
+			optVarListDeclarations();
 			break;
 		default:
 			printError();
@@ -385,6 +390,9 @@ juju_void statement() {
 		break;
 	default:
 		printError();
+	}
+	if (lookahead.code == EOS_T) {
+		matchToken(EOS_T, NO_ATTR);
 	}
 	printf("%s%s\n", STR_LANGNAME, ": Statement parsed");
 }
@@ -424,9 +432,10 @@ juju_void outputVariableList() {
 }
 
 juju_void assignmentStatement() {
-	matchToken(VARID_T, NO_ATTR);
 	matchToken(ASSIGN_OP, NO_ATTR);
 	variableExpressions();
+	//if(lookahead.code==EOS_T)
+		//matchToken(EOS_T, NO_ATTR);
 	printf("%s%s\n", STR_LANGNAME, ": Assignment statement parsed");
 }
 
@@ -439,7 +448,11 @@ juju_void variableExpressions() {
 juju_void variableExpression() {
 	switch (lookahead.code) {
 	case VARID_T:
+		matchToken(VARID_T, NO_ATTR);
+		break;
 	case INL_T:
+		matchToken(INL_T, NO_ATTR);
+		break;
 	case ARTH_OP_T:
 		arithmeticExpression();
 		break;

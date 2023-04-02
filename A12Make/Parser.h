@@ -92,6 +92,7 @@ juju_void printError();
 juju_void codeSession();
 juju_void dataSession();
 juju_void optVarListDeclarations();
+juju_void variableID();
 juju_void optionalStatements();
 juju_void outputStatement();
 juju_void outputVariableList();
